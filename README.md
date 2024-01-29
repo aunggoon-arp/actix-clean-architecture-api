@@ -9,7 +9,7 @@ This repository provides of:
 - Interaction with the MySql database
 - Password encryption
 - Payload validation
-- OpenAPI Document
+- OpenAPI Document `http://localhost:8080/docs/`
 
 ## Required
 
