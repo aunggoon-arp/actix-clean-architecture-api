@@ -2637,6 +2637,7 @@ dependencies = [
  "serde_json",
  "sha2",
  "sqlx",
+ "thiserror",
  "utoipa",
  "utoipa-swagger-ui",
  "uuid",

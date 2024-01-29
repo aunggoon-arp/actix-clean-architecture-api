@@ -29,6 +29,7 @@ sqlx = { version = "0.7", features = [
     "chrono",
     "uuid",
 ] }
+thiserror = { version = "1" }
 uuid = { version = "1.6", features = ["serde", "v4"] }
 utoipa-swagger-ui = { version = "6", features = ["actix-web", "debug-embed"] }
 validator = { version = "0.16", features = ["derive"] }
