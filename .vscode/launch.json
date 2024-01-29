@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'sample_actix_webapi'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=sample_actix_webapi",
+                    "--package=sample_actix_webapi"
+                ],
+                "filter": {
+                    "name": "sample_actix_webapi",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'sample_actix_webapi'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=sample_actix_webapi",
+                    "--package=sample_actix_webapi"
+                ],
+                "filter": {
+                    "name": "sample_actix_webapi",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

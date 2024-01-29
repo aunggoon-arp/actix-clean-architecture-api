@@ -1,0 +1,43 @@
+[package]
+name = "sample_actix_webapi"
+version = "1.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+actix = "0.13.1"
+actix-cors = "0.7"
+actix-web-actors = "4.2.0"
+actix-files = { version = "0.6.5" }
+actix-multipart = { version = "0.6.1" }
+actix-web = { version = "4" }
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4", features = ["derive", "env"] }
+dotenv = { version = "0.15" }
+futures = { version = "0.3.30" }
+headers = { version = "0.4" }
+jsonwebtoken = { version = "9" }
+lazy_static = { version = "1.4" }
+sanitize-filename = { version = "0.5.0" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
+sqlx = { version = "0.7", features = [
+    "runtime-async-std-native-tls",
+    "rust_decimal",
+    "mysql",
+    "migrate",
+    "macros",
+    "chrono",
+    "uuid",
+] }
+thiserror = { version = "1" }
+uuid = { version = "1.6", features = ["serde", "v4"] }
+utoipa-swagger-ui = { version = "6", features = ["actix-web", "debug-embed"] }
+validator = { version = "0.16", features = ["derive"] }
+utoipa = { version = "4", features = ["actix_extras", "chrono", "decimal", "uuid", "openapi_extensions"] }
+sha2 = { version = "0.10.8" }
+base64ct = { version = "1.6.0" }
+rust_xlsxwriter = { version = "0.62.0" }
+image = { verion = "0.24.8" }
+fast_image_resize = { version = "2.7.3" }
