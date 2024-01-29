@@ -9,6 +9,7 @@ This repository provides of:
 - Interaction with the MySql database
 - Password encryption
 - Payload validation
+- OpenAPI Document
 
 ## Required
 
