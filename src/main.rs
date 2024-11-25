@@ -9,12 +9,9 @@ use std::time::Duration;
 use actix_cors::Cors;
 use actix_files as fs;
 use actix_web::{http::header, middleware::Logger, web, App, HttpServer};
-use controller::{
-    file_controller, role_controller,
-    root_controller, user_controller,
-};
+use controller::{file_controller, role_controller, root_controller, user_controller};
 use dotenv::dotenv;
-use sqlx::mysql::{MySqlPool, MySqlPoolOptions};
+use sqlx::postgres::{PgPool, PgPoolOptions};
 use utils::{swagger_docs::ApiDoc, web_socket::ws_index};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
@@ -28,8 +25,8 @@ mod query;
 mod service;
 mod utils;
 
-pub struct MySqlState {
-    pub db: MySqlPool,
+pub struct PgState {
+    pub db: PgPool,
 }
 
 #[actix_web::main]
@@ -37,7 +34,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let origins = std::env::var("ORIGINS").expect("ORIGINS must be set");
     let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    let pool = match MySqlPoolOptions::new()
+    let pool = match PgPoolOptions::new()
         .max_connections(10)
         .connect(&database_url)
         .await
@@ -79,7 +76,7 @@ async fn main() -> std::io::Result<()> {
             ])
             .supports_credentials();
         App::new()
-            .app_data(web::Data::new(MySqlState { db: pool.clone() }))
+            .app_data(web::Data::new(PgState { db: pool.clone() }))
             .route("/ws/", web::get().to(ws_index))
             .service(
                 web::scope("/api")

@@ -10,6 +10,8 @@ pub enum CustomError {
     JwtError(#[from] jsonwebtoken::errors::Error),
     #[error(transparent)]
     ValidationError(#[from] validator::ValidationErrors),
+    #[error("Function process error")]
+    FunctionProcessError,
     #[error("Wrong credentials")]
     WrongCredentials,
     #[error("Password doesn't match")]

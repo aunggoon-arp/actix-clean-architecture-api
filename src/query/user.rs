@@ -1,5 +1,5 @@
 use chrono::Local;
-use sqlx::MySqlPool;
+use sqlx::PgPool;
 
 use crate::{
     dto::user::{CreateUserData, UpdateUserData, UserLoginData},
@@ -8,12 +8,12 @@ use crate::{
 };
 
 impl User {
-    pub async fn find_user_by_id(id: i32, pool: &MySqlPool) -> ApiResult<Option<User>> {
+    pub async fn find_user_by_id(id: i32, pool: &PgPool) -> ApiResult<Option<User>> {
         let sql = format!("SELECT * FROM {} WHERE id = ? LIMIT 1", User::TABLE);
         Ok(sqlx::query_as(&sql).bind(id).fetch_optional(pool).await?)
     }
 
-    pub async fn find_user_login(data: UserLoginData, pool: &MySqlPool) -> ApiResult<Option<User>> {
+    pub async fn find_user_login(data: UserLoginData, pool: &PgPool) -> ApiResult<Option<User>> {
         let sql = format!(
             "SELECT * FROM {} WHERE email = ? AND password_hash = ? LIMIT 1",
             User::TABLE
@@ -25,7 +25,7 @@ impl User {
             .await?)
     }
 
-    pub async fn find_user_by_email(email: &str, pool: &MySqlPool) -> ApiResult<Option<User>> {
+    pub async fn find_user_by_email(email: &str, pool: &PgPool) -> ApiResult<Option<User>> {
         let sql = format!("SELECT * FROM {} WHERE email = ? LIMIT 1", User::TABLE);
         Ok(sqlx::query_as(&sql)
             .bind(email)
@@ -33,7 +33,7 @@ impl User {
             .await?)
     }
 
-    pub async fn create_user(data: CreateUserData, pool: &MySqlPool) -> ApiResult<u64> {
+    pub async fn create_user(data: CreateUserData, pool: &PgPool) -> ApiResult<u64> {
         let sql = format!(
             "
             INSERT INTO {} (firstname, lastname, role_id, profile_image, email, password_hash, point, follower, following, is_deleted, is_confirmed, created_at)
@@ -59,7 +59,7 @@ impl User {
         Ok(excutor.rows_affected())
     }
 
-    pub async fn update_user(data: UpdateUserData, pool: &MySqlPool) -> ApiResult<u64> {
+    pub async fn update_user(data: UpdateUserData, pool: &PgPool) -> ApiResult<u64> {
         let sql = format!(
             "
             UPDATE {}

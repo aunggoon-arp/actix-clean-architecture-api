@@ -1,5 +1,5 @@
 use chrono::Local;
-use sqlx::MySqlPool;
+use sqlx::PgPool;
 
 use crate::{
     error::ApiResult,
@@ -7,17 +7,17 @@ use crate::{
 };
 
 impl Role {
-    pub async fn find_role_by_id(id: i32, pool: &MySqlPool) -> ApiResult<Role> {
+    pub async fn find_role_by_id(id: i32, pool: &PgPool) -> ApiResult<Role> {
         let sql = format!("SELECT * FROM {} WHERE id = $1 LIMIT 1", Role::TABLE);
         Ok(sqlx::query_as(&sql).bind(id).fetch_one(pool).await?)
     }
 
-    pub async fn find_role_all(pool: &MySqlPool) -> ApiResult<Vec<Role>> {
+    pub async fn find_role_all(pool: &PgPool) -> ApiResult<Vec<Role>> {
         let sql = format!("SELECT * FROM {}", Role::TABLE);
         Ok(sqlx::query_as(&sql).fetch_all(pool).await?)
     }
 
-    pub async fn create_role(data: CreateRoleData, pool: &MySqlPool) -> ApiResult<Role> {
+    pub async fn create_role(data: CreateRoleData, pool: &PgPool) -> ApiResult<Role> {
         let sql = format!(
             "
             INSERT INTO {} (name_th, name_en, role_code, created_at, updated_at)
@@ -36,7 +36,7 @@ impl Role {
             .await?)
     }
 
-    pub async fn update_role(data: UpdateRoleData, pool: &MySqlPool) -> ApiResult<Role> {
+    pub async fn update_role(data: UpdateRoleData, pool: &PgPool) -> ApiResult<Role> {
         let sql = format!(
             "
             UPDATE {}

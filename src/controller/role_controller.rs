@@ -2,10 +2,13 @@ use actix_web::{get, post, put, web, HttpRequest, HttpResponse, Responder};
 use serde_json::json;
 
 use crate::{
-    dto::{custom::ParamRequest, role::{CreateRoleInput, UpdateRoleInput}},
+    dto::{
+        custom::ParamRequest,
+        role::{CreateRoleInput, UpdateRoleInput},
+    },
     service::role::RoleService,
     utils::jwt::jwt_verify,
-    MySqlState,
+    PgState,
 };
 
 pub fn role_route_config(cfg: &mut web::ServiceConfig) {
@@ -42,7 +45,7 @@ async fn hello_role(_req: HttpRequest) -> impl Responder {
 async fn get_role_by_id(
     _req: HttpRequest,
     path: web::Path<ParamRequest>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> HttpResponse {
     let authorize = jwt_verify(_req);
     match authorize {
@@ -72,7 +75,7 @@ async fn get_role_by_id(
     ),
 )]
 #[get("/role/getAll")]
-async fn get_role_all(_req: HttpRequest, db_state: web::Data<MySqlState>) -> HttpResponse {
+async fn get_role_all(_req: HttpRequest, db_state: web::Data<PgState>) -> HttpResponse {
     let authorize = jwt_verify(_req);
     match authorize {
         Ok(_user_claim) => {
@@ -104,7 +107,7 @@ async fn get_role_all(_req: HttpRequest, db_state: web::Data<MySqlState>) -> Htt
 async fn post_create_role(
     _req: HttpRequest,
     body: web::Json<CreateRoleInput>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> HttpResponse {
     let authorize = jwt_verify(_req);
     match authorize {
@@ -139,7 +142,7 @@ async fn post_create_role(
 async fn put_update_role(
     _req: HttpRequest,
     body: web::Json<UpdateRoleInput>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> HttpResponse {
     let authorize = jwt_verify(_req);
     match authorize {

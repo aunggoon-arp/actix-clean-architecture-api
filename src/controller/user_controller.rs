@@ -2,10 +2,13 @@ use actix_web::{get, post, put, web, HttpRequest, HttpResponse, Responder};
 use serde_json::json;
 
 use crate::{
-    dto::{custom::ParamRequest, user::{CreateUserInput, UpdateUserInput, UserLoginInput}},
+    dto::{
+        custom::ParamRequest,
+        user::{CreateUserInput, UpdateUserInput, UserLoginInput},
+    },
     service::user::UserService,
     utils::jwt::{jwt_sign, jwt_verify},
-    MySqlState,
+    PgState,
 };
 
 pub fn user_route_config(cfg: &mut web::ServiceConfig) {
@@ -42,7 +45,7 @@ async fn hello_user() -> impl Responder {
 async fn get_user_by_id(
     _req: HttpRequest,
     path: web::Path<ParamRequest>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> impl Responder {
     let param = path.into_inner();
     let result = UserService::get_user_by_id(param.id, &db_state.db).await;
@@ -67,7 +70,7 @@ async fn get_user_by_id(
 async fn post_user_login(
     _req: HttpRequest,
     body: web::Json<UserLoginInput>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> impl Responder {
     let input = UserLoginInput {
         email: body.email.clone(),
@@ -88,10 +91,10 @@ async fn post_user_login(
                 }
             }
         }
-        Err(_err) => { 
+        Err(_err) => {
             let json = json!({"message": _err.to_string()});
-            HttpResponse::BadRequest().json(web::Json(json)) 
-        },
+            HttpResponse::BadRequest().json(web::Json(json))
+        }
     }
 }
 
@@ -107,7 +110,7 @@ async fn post_user_login(
 async fn post_register(
     _req: HttpRequest,
     body: web::Json<CreateUserInput>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> impl Responder {
     let input = CreateUserInput {
         email: body.email.clone(),
@@ -137,7 +140,7 @@ async fn post_register(
 async fn put_update_user(
     _req: HttpRequest,
     body: web::Json<UpdateUserInput>,
-    db_state: web::Data<MySqlState>,
+    db_state: web::Data<PgState>,
 ) -> impl Responder {
     let authorize = jwt_verify(_req);
     match authorize {
