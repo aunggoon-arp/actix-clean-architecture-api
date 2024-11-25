@@ -10,5 +10,5 @@ pub struct Role {
 }
 
 impl Role {
-    pub const TABLE: &'static str = "role_info";
+    pub const TABLE: &'static str = "sys_user_role";
 }

@@ -14,7 +14,7 @@ pub fn root_route_config(cfg: &mut web::ServiceConfig) {
 )]
 #[get("")]
 pub async fn hello_home(_req: HttpRequest) -> impl Responder {
-    HttpResponse::Ok().body("<h1>Hello actor stock api!</h1>")
+    HttpResponse::Ok().body("<h1>Hello sample api!</h1>")
 }
 
 #[utoipa::path(

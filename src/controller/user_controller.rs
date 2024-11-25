@@ -1,4 +1,4 @@
-use actix_web::{get, post, put, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{get, post, put, web::{self, Json, Path}, HttpRequest, HttpResponse, Responder};
 use serde_json::json;
 
 use crate::{
@@ -44,7 +44,7 @@ async fn hello_user() -> impl Responder {
 #[get("/user/getById/{id}")]
 async fn get_user_by_id(
     _req: HttpRequest,
-    path: web::Path<ParamRequest>,
+    path: Path<ParamRequest>,
     db_state: web::Data<PgState>,
 ) -> impl Responder {
     let param = path.into_inner();
@@ -64,12 +64,12 @@ async fn get_user_by_id(
         (status = 200, description = "Login !"),
         (status = 409, description = "Invalid Request Format")
     ),
-    request_body(content = String, example = json!({"email": "johndoe@example.com", "password": "password123"})),
+    request_body(content = UserLoginInput, example = json!({"email": "johndoe@example.com", "password": "password123"})),
 )]
 #[post("/user/login")]
 async fn post_user_login(
     _req: HttpRequest,
-    body: web::Json<UserLoginInput>,
+    body: Json<UserLoginInput>,
     db_state: web::Data<PgState>,
 ) -> impl Responder {
     let input = UserLoginInput {
@@ -83,17 +83,17 @@ async fn post_user_login(
             match sign_token_result {
                 Ok(token) => {
                     let json = json!({"token": token});
-                    HttpResponse::Ok().json(web::Json(json))
+                    HttpResponse::Ok().json(Json(json))
                 }
                 Err(_err) => {
                     let json = json!({"message": "Internal server error."});
-                    HttpResponse::Unauthorized().json(web::Json(json))
+                    HttpResponse::Unauthorized().json(Json(json))
                 }
             }
         }
         Err(_err) => {
             let json = json!({"message": _err.to_string()});
-            HttpResponse::BadRequest().json(web::Json(json))
+            HttpResponse::BadRequest().json(Json(json))
         }
     }
 }
@@ -104,12 +104,12 @@ async fn post_user_login(
         (status = 200, description = "Create user !"),
         (status = 409, description = "Invalid Request Format")
     ),
-    request_body(content = String, example = json!({"email": "johndoe@example.com", "password": "password123", "firstname": "Mr.Sun", "lastname": "Hapoon"})),
+    request_body(content = CreateUserInput, example = json!({"email": "johndoe@example.com", "password": "password123", "firstname": "Mr.Sun", "lastname": "Hapoon"})),
 )]
 #[post("/user/register")]
 async fn post_register(
     _req: HttpRequest,
-    body: web::Json<CreateUserInput>,
+    body: Json<CreateUserInput>,
     db_state: web::Data<PgState>,
 ) -> impl Responder {
     let input = CreateUserInput {
@@ -134,12 +134,12 @@ async fn post_register(
         (status = 200, description = "Update user !"),
         (status = 409, description = "Invalid Request Format")
     ),
-    request_body(content = String, example = json!({"id": 1, "firstname": "Mr.Sun", "lastname": "Hapoon"})),
+    request_body(content = UpdateUserInput, example = json!({"id": 1, "firstname": "Mr.Sun", "lastname": "Hapoon"})),
 )]
 #[put("/user/update")]
 async fn put_update_user(
     _req: HttpRequest,
-    body: web::Json<UpdateUserInput>,
+    body: Json<UpdateUserInput>,
     db_state: web::Data<PgState>,
 ) -> impl Responder {
     let authorize = jwt_verify(_req);

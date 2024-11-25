@@ -8,7 +8,7 @@ use crate::{
 
 impl Role {
     pub async fn find_role_by_id(id: i32, pool: &PgPool) -> ApiResult<Role> {
-        let sql = format!("SELECT * FROM {} WHERE id = $1 LIMIT 1", Role::TABLE);
+        let sql = format!("SELECT * FROM {} WHERE id = $1", Role::TABLE);
         Ok(sqlx::query_as(&sql).bind(id).fetch_one(pool).await?)
     }
 

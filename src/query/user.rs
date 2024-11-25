@@ -9,14 +9,14 @@ use crate::{
 
 impl User {
     pub async fn find_user_by_id(id: i32, pool: &PgPool) -> ApiResult<Option<User>> {
-        let sql = format!("SELECT * FROM {} WHERE id = ? LIMIT 1", User::TABLE);
+        let sql = format!("SELECT * FROM {} WHERE id = $1", User::TABLE);
         Ok(sqlx::query_as(&sql).bind(id).fetch_optional(pool).await?)
     }
 
     pub async fn find_user_login(data: UserLoginData, pool: &PgPool) -> ApiResult<Option<User>> {
         let sql = format!(
-            "SELECT * FROM {} WHERE email = ? AND password_hash = ? LIMIT 1",
-            User::TABLE
+            "SELECT * FROM {} WHERE phone_no = $1 AND password_hash = $2",
+            User::TABLE,
         );
         Ok(sqlx::query_as(&sql)
             .bind(data.email)
@@ -26,7 +26,7 @@ impl User {
     }
 
     pub async fn find_user_by_email(email: &str, pool: &PgPool) -> ApiResult<Option<User>> {
-        let sql = format!("SELECT * FROM {} WHERE email = ? LIMIT 1", User::TABLE);
+        let sql = format!("SELECT * FROM {} WHERE phone_no = $1", User::TABLE);
         Ok(sqlx::query_as(&sql)
             .bind(email)
             .fetch_optional(pool)
@@ -37,7 +37,8 @@ impl User {
         let sql = format!(
             "
             INSERT INTO {} (firstname, lastname, role_id, profile_image, email, password_hash, point, follower, following, is_deleted, is_confirmed, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            RETURNING *
             ",
             User::TABLE
         );
@@ -63,8 +64,9 @@ impl User {
         let sql = format!(
             "
             UPDATE {}
-            SET firstname = ?, lastname = ?, updated_at = ?
-            WHERE id = ?
+            SET firstname = $1, lastname = $2, updated_at = $3
+            WHERE id = $4
+            RETURNING *
             ",
             User::TABLE
         );

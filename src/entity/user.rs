@@ -32,5 +32,5 @@ pub struct User {
 }
 
 impl User {
-    pub const TABLE: &'static str = "user_info";
+    pub const TABLE: &'static str = "sys_user";
 }

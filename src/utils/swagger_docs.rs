@@ -31,7 +31,7 @@ use crate::controller::user_controller;
             utoipa::TupleUnit
         )
     ),
-    info(description = "Actor Stock Api"),
+    info(description = "Sample Api"),
     modifiers(&SecurityAddon)
 )]
 
