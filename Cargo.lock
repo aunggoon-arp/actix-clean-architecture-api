@@ -2647,6 +2647,7 @@ dependencies = [
  "clap",
  "dotenv",
  "fast_image_resize",
+ "hex",
  "image",
  "jsonwebtoken",
  "lazy_static",

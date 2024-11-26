@@ -43,3 +43,4 @@ image = { version = "0.25" }
 fast_image_resize = { version = "5" }
 actix-cors = { version = "0.7" }
 actix-web-actors = { version =  "4.3" }
+hex = { version = "0.4.3" }
